@@ -44,7 +44,8 @@ const RegisterPage = () => {
         })
         .catch((err) => {
           setIsLoading(false)
-          alert(err?.response?.data?.message)
+          console.log(err);
+          err.response && alert(err?.response?.data?.message)
         })
     } else {
       alert("Please fill out all fields")

@@ -18,7 +18,7 @@ const Home = () => {
                 setIsLoading(false);
             })
             .catch((err) => {
-                alert(err.message)
+                err.response && alert(err.response.data.message)
                 console.log(err);
             })
 

@@ -30,7 +30,7 @@ const LoginPage = () => {
             })
             .catch((err) => {
                 console.log(err);
-                alert(err?.response?.data?.message)
+                err.response && alert(err?.response?.data?.message)
             })
     }
     return !islogin ? (<>

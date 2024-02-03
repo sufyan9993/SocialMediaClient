@@ -67,8 +67,8 @@ const Profile = () => {
       setProfileData(data.userData)
     } catch (err) {
       setIsLoading(false)
-      err.response.data.message === "User not found" && navigate('Not Found')
-      console.log(err?.response?.data?.message);
+      err?.response?.data?.message === "User not found" && navigate('Not Found')
+      console.log(err);
     }
   }
   const handleEditProfile = () => {

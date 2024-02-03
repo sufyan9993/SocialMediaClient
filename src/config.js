@@ -1,8 +1,8 @@
 import axios from "axios";
 import { setData } from "./redux/features/userSlice";
 
-export const BASE_URL = 'http://localhost:8080'
-// export const BASE_URL = 'https://socialize-w9vk.onrender.com'
+// export const BASE_URL = 'http://localhost:8080'
+export const BASE_URL = 'https://socialize-w9vk.onrender.com'
 
 
 export const calculateDate = (dt) => {
@@ -36,7 +36,8 @@ export const getUserData = async (dispatchMethod, user) => {
         const { _id, username, profilePhoto, following, follower, savedPosts } = data.userData
         dispatchMethod(setData({ _id, profilePhoto, following, follower, savedPosts, token: user.SecurityToken, username }))
     } catch (err) {
-        console.log(err?.response?.data?.message);
+        err.response && alert(err.response.data.message)
+        console.log(err);
     }
 }
 

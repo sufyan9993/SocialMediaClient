@@ -63,7 +63,7 @@ const PostCard = ({ post, updatePosts = () => undefined || null, minusWidth = 0 
     if (post.user.username === user.userName && user.login) {
         menuItem.push({ text: 'Delete Post', method: deletePost })
     } else if (user.login) {
-        !user.savedPosts.includes(post._id)
+        !user.savedPosts?.includes(post._id)
             ? menuItem.push({ text: 'Save', method: () => handleSavePost('savePost') })
             : menuItem.push({ text: 'UnSave', method: () => handleSavePost('unSavePost') })
 
