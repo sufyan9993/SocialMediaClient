@@ -1,5 +1,5 @@
-import React, {  useState } from 'react'
-import { Box,  InputAdornment, Stack, TextField } from "@mui/material"
+import React, { useState } from 'react'
+import { Box, InputAdornment, Stack, TextField } from "@mui/material"
 import { AccountCircle, Lock, Login, Person } from "@mui/icons-material"
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,8 +7,9 @@ import { loginSuccess } from '../redux/features/userSlice'
 import axios from 'axios'
 import { BASE_URL } from '../config'
 import { CustomButton } from '../components/customs'
+import CircularLoading from '../components/Loading'
 const LoginPage = () => {
-
+    const [isLoading, setIsLoading] = useState(false)
     const [FormValues, setFormValues] = useState({
         username: '',
         password: ''
@@ -16,25 +17,30 @@ const LoginPage = () => {
     const dispatch = useDispatch()
     const islogin = useSelector(state => state.user.login)
     const navigate = useNavigate()
+
+
     const handleSubmit = (e) => {
         e.preventDefault()
+        setIsLoading(true)
         axios.post(`${BASE_URL}/Auth/Login`, FormValues)
             .then((res) => {
                 const token = res.data.token
-                dispatch(loginSuccess({...res.data.userData,token}))
+                setIsLoading(false)
+                dispatch(loginSuccess({ ...res.data.userData, token }))
             })
             .catch((err) => {
                 console.log(err);
                 alert(err?.response?.data?.message)
             })
     }
-    return !islogin ? (
+    return !islogin ? (<>
+        {isLoading && <CircularLoading />}
         <Stack marginX={'10px'} position="relative" height={'80vh'} direction={'row'} alignItems={'center'} justifyContent={'center'}  >
             <Box
                 className='color-white'
                 sx={{
                     textAlign: 'center',
-                    width:'400px'
+                    width: '400px'
                 }}
 
             >
@@ -76,6 +82,7 @@ const LoginPage = () => {
                 </CustomButton>
             </Box>
         </Stack>
+    </>
     ) : <Navigate to={'/'} />
 }
 

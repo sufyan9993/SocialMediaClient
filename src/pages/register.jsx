@@ -8,8 +8,10 @@ import { BASE_URL } from '../config'
 import axios from 'axios'
 import CropImage from './imageCrop/crop'
 import { CustomButton } from '../components/customs'
+import CircularLoading from '../components/Loading'
 
 const RegisterPage = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const [FormValues, setFormValues] = useState({
     profilePhoto: null,
     username: '',
@@ -26,6 +28,7 @@ const RegisterPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (cropData) {
+      setIsLoading(true)
       const formData = new FormData()
       formData.append('profilePhoto', cropData)
       formData.append('username', FormValues.username)
@@ -36,11 +39,12 @@ const RegisterPage = () => {
       axios.post(`${BASE_URL}/Auth/Register`, formData)
         .then((res) => {
           const token = res.data.token
+          setIsLoading(false)
           dispatch(loginSuccess({ ...res.data.userData, token }))
         })
         .catch((err) => {
-          console.log(err);
-          alert(err.response.data.message)
+          setIsLoading(false)
+          alert(err?.response?.data?.message)
         })
     } else {
       alert("Please fill out all fields")
@@ -57,9 +61,10 @@ const RegisterPage = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  return !islogin ? (
+  return !islogin ? (<>
+    {isLoading && <CircularLoading />}
     <Stack marginX={'10px'} position="relative" alignItems={'center'} >
-      <Box  
+      <Box
         className='color-white'
         sx={{
           textAlign: 'center',
@@ -144,6 +149,7 @@ const RegisterPage = () => {
       </Box>
       <CropImage ratio={(1 / 1)} imageFile={FormValues.profilePhoto} setCropData={setCropData} />
     </Stack>
+  </>
   ) : <Navigate to={'/'} />
 }
 

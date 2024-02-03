@@ -7,8 +7,11 @@ import { Close, Edit } from '@mui/icons-material';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { CustomButton, customScrollbarStyles } from '../components/customs';
 import UsersList from '../components/usersLists';
+import CircularLoading from '../components/Loading';
 
 const Profile = () => {
+  const [isLoading, setIsLoading] = useState(true)
+
   const [profileData, setProfileData] = useState(false)
   const stateUser = useSelector(state => state.user)
   const dispatch = useDispatch()
@@ -16,7 +19,7 @@ const Profile = () => {
   const navigate = useNavigate()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [showUsers, setshowUsers] = useState([])
+  const [showUsers, setshowUsers] = useState(null)
 
   const [isMobView, setIsMobView] = useState(window.innerWidth <= 500)
   const [isTabView, setIsTabView] = useState(window.innerWidth <= 860)
@@ -42,13 +45,13 @@ const Profile = () => {
         </Stack>
         <Stack alignItems={'center'}
           onMouseOver={(e) => e.target.style.cursor = 'pointer'}
-          onClick={() => getFollowerORFollowing('follower')} >
+          onClick={() => profileData?.follower?.length > 0 && getFollowerORFollowing('follower')} >
           <Typography >{profileData?.follower?.length || 0}</Typography>
           <Typography>Follower</Typography>
         </Stack>
         <Stack alignItems={'center'}
           onMouseOver={(e) => e.target.style.cursor = 'pointer'}
-          onClick={() => getFollowerORFollowing('following')} >
+          onClick={() => profileData?.following?.length > 0 && getFollowerORFollowing('following')} >
           <Typography >{profileData?.following?.length || 0}</Typography>
           <Typography>Following</Typography>
         </Stack>
@@ -58,9 +61,12 @@ const Profile = () => {
 
   const getUserData = async () => {
     try {
+      setIsLoading(true)
       const { data } = await axios.get(`${BASE_URL}/User/${username}`)
+      setIsLoading(false)
       setProfileData(data.userData)
     } catch (err) {
+      setIsLoading(false)
       err.response.data.message === "User not found" && navigate('Not Found')
       console.log(err?.response?.data?.message);
     }
@@ -76,9 +82,9 @@ const Profile = () => {
     handleFollow(action, profileData._id, stateUser, dispatch)
   }
   useEffect(() => {
-    setshowUsers([])
-    getUserData();
     setIsModalOpen(false)
+    setshowUsers(null)
+    getUserData();
     const handleResize = () => {
       setIsMobView(window.innerWidth <= 500);
       setIsTabView(window.innerWidth <= 860);
@@ -90,7 +96,7 @@ const Profile = () => {
     // eslint-disable-next-line
   }, [stateUser, username])
   return (
-    profileData && <>
+    isLoading ? <CircularLoading /> : <>
       {isModalOpen && <Stack
         sx={{
           position: 'fixed',
