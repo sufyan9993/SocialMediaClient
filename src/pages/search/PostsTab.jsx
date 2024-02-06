@@ -11,14 +11,13 @@ const PostsTab = ({ search }) => {
     useEffect(() => {
         const getFilteredPost = async () => {
             try {
-                const { data } = await axios.get(`${BASE_URL}/Post/GetAllPost`, {
+                const { data } = await axios.get(`${BASE_URL}/Post/search/${search}`, {
                     headers: {
                         "authorization": `Bearer ${user.SecurityToken}`,
                         "Content-Type": "application/json"
                     }
                 })
-                const filter = data.posts.filter((post) => post.title.includes(search))
-                setPosts(filter)
+                setPosts(data.posts)
             } catch (error) {
                 console.log(error.message);
             }
