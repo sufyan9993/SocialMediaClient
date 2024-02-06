@@ -29,6 +29,7 @@ const LoginPage = () => {
                 dispatch(loginSuccess({ ...res.data.userData, token }))
             })
             .catch((err) => {
+                setIsLoading(false)
                 console.log(err);
                 err.response && alert(err?.response?.data?.message)
             })

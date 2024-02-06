@@ -130,6 +130,7 @@ const Profile = () => {
           <Stack
             width={'25%'}
             height={'25%'}
+            minHeight={'25%'}
             borderRadius={'50%'}
             border={'1px solid'}
             alignItems={'center'}

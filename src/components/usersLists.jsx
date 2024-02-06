@@ -1,5 +1,5 @@
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { calculateDate } from '../config'
 import { FavoriteRounded } from '@mui/icons-material'
