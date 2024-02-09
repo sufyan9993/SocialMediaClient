@@ -4,12 +4,16 @@ import React, { useEffect, useState } from 'react'
 import { BASE_URL } from '../config'
 import { Close } from '@mui/icons-material'
 import { customScrollbarStyles } from '../components/customs'
-import UsersList from './usersLists'
+import UsersList, { UserListSkeleton } from './usersLists'
 const LikedUserModal = ({ postId, setIsShow }) => {
     const [likes, setLikes] = useState([])
+    const [isMobView, setIsMobView] = useState(window.innerWidth <= 500)
+    const [isLoading, setIsLoading] = useState(true)
+
     const getLikesData = async () => {
         try {
             const { data } = await axios.get(`${BASE_URL}/Post/${postId}/getLikedata`)
+            setIsLoading(false)
             setLikes(data.likes)
         } catch (error) {
             console.log(error.message);
@@ -17,6 +21,13 @@ const LikedUserModal = ({ postId, setIsShow }) => {
     }
     useEffect(() => {
         getLikesData()
+        const handleResize = () => {
+            setIsMobView(window.innerWidth <= 500);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
         // eslint-disable-next-line
     }, [])
     return (
@@ -34,7 +45,7 @@ const LikedUserModal = ({ postId, setIsShow }) => {
 
         }}
         >
-            <Stack position={'relative'} borderRadius='20px' bgcolor={'#545c65'} width='400px' height={'70%'} >
+            <Stack position={'relative'} borderRadius='20px' bgcolor={'#545c65'} width={isMobView ? '80%' : '400px'} height={'70%'} >
                 <IconButton sx={{
                     position: 'absolute',
                     top: 0,
@@ -44,7 +55,10 @@ const LikedUserModal = ({ postId, setIsShow }) => {
                     <Close />
                 </IconButton>
                 <Stack spacing={1} sx={{ ...customScrollbarStyles, position: 'relative', top: '10%', height: '85%', paddingLeft: '10px' }}>
-                    <UsersList users={likes} isLikes={true} />
+                    {
+                        isLoading ? <UserListSkeleton />
+                            : <UsersList users={likes} isLikes={true} />
+                    }
                 </Stack>
             </Stack>
 

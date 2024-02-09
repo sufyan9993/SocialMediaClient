@@ -1,13 +1,15 @@
-import { Typography } from '@mui/material'
+import { Skeleton, Stack, Typography } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BASE_URL } from '../../config'
-import UsersList from '../../components/usersLists'
+import UsersList, { UserListSkeleton } from '../../components/usersLists'
 
 const AccountTab = ({ search }) => {
     const userState = useSelector(state => state.user)
     const [users, setUsers] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+
     useEffect(() => {
         const getFilteredUsers = async () => {
             try {
@@ -17,6 +19,7 @@ const AccountTab = ({ search }) => {
                         "Content-Type": "application/json"
                     }
                 })
+                setIsLoading(false)
                 setUsers(data.users)
             } catch (error) {
                 console.log(error.message);
@@ -25,10 +28,13 @@ const AccountTab = ({ search }) => {
         getFilteredUsers()
         // eslint-disable-next-line
     }, [search])
-    return (
-        users.length > 0
+    return (<>
+        {isLoading && <UserListSkeleton />}
+        {users.length > 0
             ? <UsersList users={users} />
-            : <Typography>User Not Found</Typography>
+            : !isLoading && <Typography>User Not Found</Typography>
+        }
+    </>
     )
 }
 

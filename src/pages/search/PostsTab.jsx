@@ -1,12 +1,13 @@
 import { Stack, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import PostCard from '../../components/postCard'
+import PostCard, { PostCardSkeleton } from '../../components/postCard'
 import axios from 'axios'
 import { BASE_URL } from '../../config'
 import { useSelector } from 'react-redux'
 
 const PostsTab = ({ search }) => {
     const [posts, setPosts] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     const user = useSelector(state => state.user)
     useEffect(() => {
         const getFilteredPost = async () => {
@@ -17,6 +18,7 @@ const PostsTab = ({ search }) => {
                         "Content-Type": "application/json"
                     }
                 })
+                setIsLoading(false)
                 setPosts(data.posts)
             } catch (error) {
                 console.log(error.message);
@@ -27,10 +29,10 @@ const PostsTab = ({ search }) => {
     }, [search])
     return (
         <Stack alignItems={'center'} flexWrap={'wrap'} direction={'row'}>
-
+            {isLoading && <PostCardSkeleton />}
             {posts.length > 0
                 ? posts.map((value, i) => <PostCard key={i} post={value} />)
-                : <Typography>No posts Found</Typography>}
+                : !isLoading && <Typography>No posts Found</Typography>}
         </Stack>
     )
 }

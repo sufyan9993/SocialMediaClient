@@ -1,16 +1,13 @@
-import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Stack, Typography } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { calculateDate } from '../config'
 import { FavoriteRounded } from '@mui/icons-material'
-import CircularLoading from './Loading'
 
 const UsersList = ({ users, isLikes = false }) => {
     const navigate = useNavigate()
-    console.log(!users, users);
     return (
         <Stack position={'relative'} height={'100%'}>
-            {!users && <CircularLoading />}
             <List className='color-white'>
                 {users && users?.map((user, i) => (
                     <ListItem key={i} disablePadding>
@@ -35,5 +32,19 @@ const UsersList = ({ users, isLikes = false }) => {
 
     )
 }
-
+export const UserListSkeleton = () => {
+    return (
+        <Stack position={'relative'} height={'100%'} spacing={1}width={'100%'}>
+            {[...Array(5)].map((_,i) => (
+                <Stack key={i} direction={'row'} alignItems={'center'} spacing={1}>
+                    <Skeleton variant='circular'height={50} width={50}/>
+                    <Stack width={'70%'}>
+                    <Skeleton variant='text' sx={{fontSize:'1.25rem'}} width={'60%'}/>
+                    <Skeleton variant='text' sx={{fontSize:'1.25rem'}}  width={'40%'}/>
+                    </Stack>
+                </Stack >
+            ))}
+        </Stack>
+    )
+}
 export default UsersList

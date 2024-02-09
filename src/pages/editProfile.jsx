@@ -75,7 +75,7 @@ const EditProfile = () => {
     return (
         UpdateProfileData &&
         <Stack padding={'20px'} direction={'row'} spacing={4}>
-            <Stack width='40%' onSubmit={handleSubmit}
+            <Stack width='100%' onSubmit={handleSubmit}
                 className='color-white'
                 component={'form'} spacing={2}>
                 <Stack
@@ -95,7 +95,8 @@ const EditProfile = () => {
                         <input type="file" style={{ display: 'none' }} onChange={handleChangePhoto} />
 
                     </IconButton>
-                    <img src={profileData?.profilePhoto} alt='profile' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={cropData ? URL.createObjectURL(cropData) : profileData?.profilePhoto}
+                     alt='profile' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </Stack>
                 <Stack spacing={1} >
                     <TextField

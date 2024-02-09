@@ -12,6 +12,7 @@ import CircularLoading from '../components/Loading'
 
 const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [isMobView, setIsMobView] = useState(window.innerWidth <= 500)
   const [FormValues, setFormValues] = useState({
     profilePhoto: null,
     username: '',
@@ -53,9 +54,7 @@ const RegisterPage = () => {
   }
   useEffect(() => {
     const handleResize = () => {
-      // setIsMobView(window.innerWidth <= 500);
-      // setSmallView(window.innerWidth <= 430);
-      // setIsTabView(window.innerWidth <= 860);
+      setIsMobView(window.innerWidth <= 500);
     };
     window.addEventListener('resize', handleResize);
     return () => {
@@ -69,7 +68,7 @@ const RegisterPage = () => {
         className='color-white'
         sx={{
           textAlign: 'center',
-          width: '400px',
+          width: isMobView? "90%" : "400px",
         }}
 
       >

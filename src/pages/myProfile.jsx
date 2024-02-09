@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { IconButton, Stack, Typography } from '@mui/material';
+import { IconButton, Skeleton, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { BASE_URL, handleFollow } from '../config';
 import { Close, Edit } from '@mui/icons-material';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { CustomButton, customScrollbarStyles } from '../components/customs';
-import UsersList from '../components/usersLists';
+import UsersList, { UserListSkeleton } from '../components/usersLists';
 import CircularLoading from '../components/Loading';
 
 const Profile = () => {
+  const stateUser = useSelector(state => state.user)
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoad, setIsLoad] = useState({
+    UserList: true,
+    profile: true,
+
+  })
 
   const [profileData, setProfileData] = useState(false)
-  const stateUser = useSelector(state => state.user)
+  const [IsFollow, setIsFollow] = useState(stateUser.login ? stateUser?.following?.includes(profileData?._id) : false)
+  const [followers, setFollowers] = useState(profileData?.follower)
   const dispatch = useDispatch()
   const { username } = useParams()
   const navigate = useNavigate()
@@ -29,6 +36,7 @@ const Profile = () => {
     try {
       if (!endPoint) return null;
       const { data } = await axios.get(`${BASE_URL}/User/${username}/${endPoint}`)
+      setIsLoad(pre => ({ ...pre, UserList: false }))
       setshowUsers(data.users)
     } catch (error) {
       console.log(error.message)
@@ -38,15 +46,15 @@ const Profile = () => {
 
   const FollowersSection = () => {
     return (
-      <Stack justifyContent={isTabView && 'space-around'} direction={'row'} spacing={5}>
+      <Stack justifyContent={isTabView && 'space-around'} direction={'row'} spacing={isMobView?2:5}>
         <Stack alignItems={'center'} onMouseOver={(e) => e.target.style.cursor = 'pointer'}>
           <Typography >{profileData?.posts || 0}</Typography>
           <Typography>Posts</Typography>
         </Stack>
         <Stack alignItems={'center'}
           onMouseOver={(e) => e.target.style.cursor = 'pointer'}
-          onClick={() => profileData?.follower?.length > 0 && getFollowerORFollowing('follower')} >
-          <Typography >{profileData?.follower?.length || 0}</Typography>
+          onClick={() => followers?.length > 0 && getFollowerORFollowing('follower')} >
+          <Typography >{followers?.length || 0}</Typography>
           <Typography>Follower</Typography>
         </Stack>
         <Stack alignItems={'center'}
@@ -58,13 +66,16 @@ const Profile = () => {
       </Stack>
     )
   }
-
-  const getUserData = async () => {
+  const getUserData = async (loading = true) => {
     try {
-      setIsLoading(true)
+
+      loading && setIsLoading(true)
       const { data } = await axios.get(`${BASE_URL}/User/${username}`)
       setIsLoading(false)
       setProfileData(data.userData)
+      setFollowers(data.userData.follower)
+      setIsFollow(stateUser?.following?.includes(data.userData?._id))
+
     } catch (err) {
       setIsLoading(false)
       err?.response?.data?.message === "User not found" && navigate('Not Found')
@@ -74,17 +85,28 @@ const Profile = () => {
   const handleEditProfile = () => {
     navigate('/Profile/Edit-Profile')
   }
-  const followHandler = () => {
+
+  const followHandler = async () => {
     if (!stateUser.login) {
       return alert('Please login for additional activity')
     }
-    const action = stateUser.following.includes(profileData._id) ? 'unfollow' : 'follow'
+    const action = followers.includes(stateUser.userId) ? 'unfollow' : 'follow'
+    if (action === 'follow') {
+      setFollowers(prevState => [...prevState, stateUser.userId])
+      setIsFollow(true)
+    } else {
+      setFollowers(prevState => prevState.filter((id) => id !== stateUser.userId))
+      setIsFollow(false)
+    }
     handleFollow(action, profileData._id, stateUser, dispatch)
   }
   useEffect(() => {
+    getUserData(false)
+  }, [stateUser])
+
+  useEffect(() => {
     setIsModalOpen(false)
     setshowUsers(null)
-    getUserData();
     const handleResize = () => {
       setIsMobView(window.innerWidth <= 500);
       setIsTabView(window.innerWidth <= 860);
@@ -94,9 +116,9 @@ const Profile = () => {
       window.removeEventListener('resize', handleResize);
     };
     // eslint-disable-next-line
-  }, [stateUser, username])
+  }, [username])
   return (
-    isLoading ? <CircularLoading /> : <>
+    <>
       {isModalOpen && <Stack
         sx={{
           position: 'fixed',
@@ -111,7 +133,7 @@ const Profile = () => {
 
 
         }}>
-        <Stack position={'relative'} borderRadius='20px' bgcolor={'#545c65'} width='400px' height={'70%'} >
+        <Stack position={'relative'} borderRadius='20px' bgcolor={'#545c65'} width={isMobView ? '80%' : '400px'} height={'70%'} >
           <IconButton onClick={() => setIsModalOpen(false)} sx={{
             position: 'absolute',
             top: 0,
@@ -120,26 +142,32 @@ const Profile = () => {
             <Close />
           </IconButton>
           <Stack spacing={1} sx={{ ...customScrollbarStyles, position: 'relative', top: '10%', height: '85%', paddingLeft: '10px' }}>
-            <UsersList users={showUsers} />
+            {
+              isLoad.UserList ? <UserListSkeleton />
+                : <UsersList users={showUsers} />
+            }
           </Stack >
         </Stack >
       </Stack>}
       <Stack spacing={1} padding={'20px'} >
         <Stack direction={'row'} spacing={4} alignItems={'center'}>
-
           <Stack
-            width={'25%'}
-            height={'25%'}
-            minHeight={'25%'}
+            width={isMobView ? '100px' : isTabView ? '150px' : '200px'}
+            height={isMobView ? '100px' : isTabView ? '150px' : '200px'}
+            minHeight={isMobView ? '100px' : isTabView ? '150px' : '200px'}
             borderRadius={'50%'}
-            border={'1px solid'}
+            border={isLoad.profile && '1px solid'}
             alignItems={'center'}
             justifyContent={'center'}
             overflow={'hidden'}
           >
-            <img src={profileData?.profilePhoto} alt='profile' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {
+              isLoad.profile && <Stack height={'100%'} width='100%'>
+                <Skeleton variant='circular' animation='wave' height={'inherit'} width={'inherit'} />
+              </Stack>}
+            <img onLoad={() => setIsLoad(pre => ({ ...pre, profile: false }))} src={profileData?.profilePhoto} alt='profile' style={{ display: isLoad.profile && 'none', width: 'inherit', height: 'inherit', objectFit: 'cover' }} />
           </Stack>
-          <Stack spacing={1} width={'75%'}>
+          <Stack spacing={1} >
             <Stack direction={'row'} spacing={3} alignItems={'center'}>
               <Typography component={'h5'} variant={'h5'} >{profileData?.username}</Typography>
               {
@@ -148,7 +176,7 @@ const Profile = () => {
                     Edit Profile
                   </CustomButton >
                   : <CustomButton onClick={followHandler}>
-                    {stateUser?.following?.includes(profileData._id) ? 'unfollow' : 'follow'}
+                    {IsFollow ? 'unfollow' : 'follow'}
                   </CustomButton>
               }
             </Stack>
@@ -158,7 +186,7 @@ const Profile = () => {
               <Typography fontWeight={'500'} fontSize={'110%'}  >
                 {profileData.fullname}
               </Typography>
-              <Typography marginTop={'0!important'} width={'100%'} sx={{ whiteSpace: 'pre-line' }} >
+              <Typography marginTop={'0!important'} sx={{ whiteSpace: 'pre-line' }} >
                 {profileData.bio}
               </Typography>
             </>}

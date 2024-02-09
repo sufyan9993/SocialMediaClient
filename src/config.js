@@ -1,9 +1,8 @@
 import axios from "axios";
 import { setData } from "./redux/features/userSlice";
 
-// export const BASE_URL = 'http://localhost:8080'
-// export const BASE_URL = 'http://192.168.178.3:8080'
-export const BASE_URL = 'https://socialize-w9vk.onrender.com'
+export const BASE_URL = 'http://localhost:8080'
+// export const BASE_URL = 'https://socialize-w9vk.onrender.com'
 
 
 export const calculateDate = (dt) => {
@@ -50,7 +49,7 @@ export const handleFollow = async (action, followingUserId, user, dispatchMethod
                 'Content-Type': 'application/json'
             }
         })
-        getUserData(dispatchMethod, user)
+        await getUserData(dispatchMethod, user)
 
     } catch (error) {
         console.log(error);

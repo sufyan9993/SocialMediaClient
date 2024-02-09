@@ -7,6 +7,7 @@ import { BASE_URL } from '../config'
 import axios from 'axios'
 import CropImage from './imageCrop/crop'
 import { CustomButton, customScrollbarStyles } from '../components/customs'
+import CircularLoading from '../components/Loading'
 const AddPost = () => {
     const user = useSelector(state => state.user)
     const navigate = useNavigate()
@@ -14,6 +15,8 @@ const AddPost = () => {
     const [cropData, setCropData] = useState(null)
     const [isTabView, setIsTabView] = useState(window.innerWidth <= 860)
     const [isMobView, setIsMobView] = useState(window.innerWidth <= 500)
+    const [isLoading, setIsLoading] = useState(false)
+
 
 
     const [FormValues, setFormValues] = useState({
@@ -26,6 +29,7 @@ const AddPost = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        setIsLoading(true)
         if (FormValues.image && FormValues.title) {
 
             const formData = new FormData()
@@ -41,9 +45,11 @@ const AddPost = () => {
                 }
             })
                 .then((res) => {
+                    setIsLoading(false)
                     navigate(`/Profile/${user.userName}`)
                 })
                 .catch((err) => {
+                    setIsLoading(false)
                     console.log(err);
                     alert(err.response?.data?.message)
                 })
@@ -73,6 +79,8 @@ const AddPost = () => {
             alignItems: 'center',
 
         }} >
+            {isLoading && <CircularLoading />}
+
             <Stack sx={{ ...customScrollbarStyles, maxHeight: '90vh', ...(isMobView ? { marginLeft: '0px' } : isTabView ? { marginLeft: '60px' } : { marginLeft: '240px' }) }} width={isTabView ? '80%' : '60%'} padding='20px' >
                 <Stack
                     className='color-white'

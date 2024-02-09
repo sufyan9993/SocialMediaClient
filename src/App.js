@@ -33,6 +33,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="Search/:search" element={<SearchPage />} />
             <Route path="Profile/Edit-Profile" element={<EditProfile />} />
+            <Route path='Post/:PostId' element={<Home singlePost={true} />} />
             <Route path="Profile/:username" element={<Profile />}>
               <Route path="" element={<ProfilePosts />} />
               <Route path="Saved" element={<ProtectedRoute><SavedPost /></ProtectedRoute>} />
