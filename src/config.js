@@ -2,7 +2,7 @@ import axios from "axios";
 import { setData } from "./redux/features/userSlice";
 
 export const BASE_URL = process.env.REACT_APP_BASE_URL
-
+console.log(BASE_URL);
 export const calculateDate = (dt) => {
     const postCreationDate = new Date(dt);
     const currentDate = new Date();
