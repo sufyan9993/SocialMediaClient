@@ -17,7 +17,6 @@ const PostCard = ({ post, updatePosts }) => {
     const [smallView, setSmallView] = useState(window.innerWidth <= 430)
     const [isShowMoreCaption, setIsShowMoreCaption] = useState(false)
     const [isMenuShow, setIsMenuShow] = useState(false)
-    const [IsPostLoaded, setIsPostLoaded] = useState(false)
     const [Load, setLoad] = useState({
         profile: false,
         post: false
@@ -197,7 +196,7 @@ const PostCard = ({ post, updatePosts }) => {
                             </Stack>
                             <Stack direction={'row'} spacing={1} flexWrap={'wrap'}>
                                 {
-                                    post.tags.map((value, i) => i < 2 && <span key={i} onMouseOver={(e) => e.target.style.cursor = 'pointer'} onClick={() => navigate(`/search/${value}`)}>#{value}</span>)
+                                    post.tags.map((value, i) => i < 2 && <span key={i} onMouseOver={(e) => e.target.style.cursor = 'pointer'} onClick={() => navigate(`/search/${value}`,{state:{index:1}})}>#{value}</span>)
                                 }
                             </Stack>
                         </Stack>

@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AccountTab from './AccountTab';
 import PostsTab from './PostsTab';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useState } from 'react';
 
 function CustomTabPanel({ children, value, index }) {
@@ -33,13 +33,14 @@ function a11yProps(index) {
 }
 
 const SearchPage = () => {
-  const {search} = useParams()
-  const [value, setValue] = useState(0);
-
+  const { search } = useParams()
+  const location = useLocation();
+  const index = location.state?.index || 0;
+  const [value, setValue] = useState(index);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-    
+
   return (
     <Box sx={{ width: '100%' }} className='color-white'>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

@@ -1,4 +1,5 @@
-import { Button } from "@mui/material"
+import { Button,Box, CircularProgress } from "@mui/material"
+
 
 export const CustomButton = ({ children, type = 'button', variant = 'contained', style = {}, ...restprops }) => {
     return <Button
@@ -35,3 +36,13 @@ export const customScrollbarStyles = {
         background: '#1976d2', // Set the color of the scrollbar track
     },
 };
+
+export const CircularLoading = () => {
+    return (
+        <Box sx={{
+            display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 5
+        }}>
+            <CircularProgress size={60} />
+        </Box >
+    );
+}

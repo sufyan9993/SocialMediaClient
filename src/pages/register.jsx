@@ -7,8 +7,7 @@ import { loginSuccess } from '../redux/features/userSlice'
 import { BASE_URL } from '../config'
 import axios from 'axios'
 import CropImage from './imageCrop/crop'
-import { CustomButton } from '../components/customs'
-import CircularLoading from '../components/Loading'
+import { CircularLoading, CustomButton } from '../components/customs'
 
 const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false)

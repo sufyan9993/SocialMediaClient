@@ -9,21 +9,21 @@ const PostsTab = ({ search }) => {
     const [posts, setPosts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const user = useSelector(state => state.user)
-    useEffect(() => {
-        const getFilteredPost = async () => {
-            try {
-                const { data } = await axios.get(`${BASE_URL}/Post/search/${search}`, {
-                    headers: {
-                        "authorization": `Bearer ${user.SecurityToken}`,
-                        "Content-Type": "application/json"
-                    }
-                })
-                setIsLoading(false)
-                setPosts(data.posts)
-            } catch (error) {
-                console.log(error.message);
-            }
+    const getFilteredPost = async () => {
+        try {
+            const { data } = await axios.get(`${BASE_URL}/Post/search/${search}`, {
+                headers: {
+                    "authorization": `Bearer ${user.SecurityToken}`,
+                    "Content-Type": "application/json"
+                }
+            })
+            setIsLoading(false)
+            setPosts(data.posts)
+        } catch (error) {
+            console.log(error.message);
         }
+    }
+    useEffect(() => {
         getFilteredPost()
         // eslint-disable-next-line
     }, [search])
@@ -31,7 +31,7 @@ const PostsTab = ({ search }) => {
         <Stack alignItems={'center'} flexWrap={'wrap'} direction={'row'}>
             {isLoading && <PostCardSkeleton />}
             {posts.length > 0
-                ? posts.map((value, i) => <PostCard key={i} post={value} />)
+                ? posts.map((value, i) => <PostCard key={i} post={value} updatePosts={getFilteredPost} />)
                 : !isLoading && <Typography>No posts Found</Typography>}
         </Stack>
     )

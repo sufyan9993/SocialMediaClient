@@ -7,7 +7,7 @@ import { loginSuccess } from '../redux/features/userSlice'
 import axios from 'axios'
 import { BASE_URL } from '../config'
 import { CustomButton } from '../components/customs'
-import CircularLoading from '../components/Loading'
+import { CircularLoading } from '../components/customs'
 const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [FormValues, setFormValues] = useState({

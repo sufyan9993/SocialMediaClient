@@ -7,7 +7,7 @@ import { BASE_URL } from '../config'
 import axios from 'axios'
 import CropImage from './imageCrop/crop'
 import { CustomButton, customScrollbarStyles } from '../components/customs'
-import CircularLoading from '../components/Loading'
+import { CircularLoading } from '../components/customs'
 const AddPost = () => {
     const user = useSelector(state => state.user)
     const navigate = useNavigate()

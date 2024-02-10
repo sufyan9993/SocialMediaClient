@@ -7,11 +7,9 @@ import { Close, Edit } from '@mui/icons-material';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { CustomButton, customScrollbarStyles } from '../components/customs';
 import UsersList, { UserListSkeleton } from '../components/usersLists';
-import CircularLoading from '../components/Loading';
 
 const Profile = () => {
   const stateUser = useSelector(state => state.user)
-  const [isLoading, setIsLoading] = useState(true)
   const [isLoad, setIsLoad] = useState({
     UserList: true,
     profile: true,
@@ -68,16 +66,12 @@ const Profile = () => {
   }
   const getUserData = async (loading = true) => {
     try {
-
-      loading && setIsLoading(true)
       const { data } = await axios.get(`${BASE_URL}/User/${username}`)
-      setIsLoading(false)
       setProfileData(data.userData)
       setFollowers(data.userData.follower)
       setIsFollow(stateUser?.following?.includes(data.userData?._id))
 
     } catch (err) {
-      setIsLoading(false)
       err?.response?.data?.message === "User not found" && navigate('Not Found')
       console.log(err);
     }
@@ -102,6 +96,7 @@ const Profile = () => {
   }
   useEffect(() => {
     getUserData(false)
+    // eslint-disable-next-line
   }, [stateUser])
 
   useEffect(() => {

@@ -39,7 +39,6 @@ const Body = ({ searchRef }) => {
     const [inputValue, setInputValue] = useState('')
     const [isMobView, setIsMobView] = useState(window.innerWidth <= 500)
     const [isTabView, setIsTabView] = useState(window.innerWidth <= 860)
-    const [smallView, setSmallView] = useState(window.innerWidth <= 430)
     const HeaderRef = useRef(null)
 
     const handleEnterPress = (e) => {
@@ -51,7 +50,6 @@ const Body = ({ searchRef }) => {
     useEffect(() => {
         const handleResize = () => {
             setIsMobView(window.innerWidth <= 500);
-            setSmallView(window.innerWidth <= 430);
             setIsTabView(window.innerWidth <= 860);
         };
         window.addEventListener('resize', handleResize);
