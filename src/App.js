@@ -7,7 +7,7 @@ import Register from './pages/register';
 import ProtectedRoute from './middleware/protectedRoute';
 import Layout from './components/layout';
 import SavedPost from './components/savedPosts';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import AddPost from './pages/addPost';
 import ProfilePosts from './components/profilePosts';
 import EditProfile from './pages/editProfile';

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
-import { ImageListItemBar, List, Skeleton, Stack } from '@mui/material';
+import { ImageListItemBar,  Skeleton, Stack } from '@mui/material';
 import { useState } from 'react';
-import PostCard, { PostCardSkeleton } from './postCard';
+import PostCard from './postCard';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../config';

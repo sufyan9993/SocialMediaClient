@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
-import { ImageListItemBar, Stack, Typography } from '@mui/material';
+import { ImageListItemBar, Skeleton, Stack } from '@mui/material';
 import { useState } from 'react';
 import PostCard from './postCard';
 import { useParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ export default function SavedPosts() {
   const [showImage, setShowImage] = useState(false)
   const [posts, setPosts] = useState([])
   const { username } = useParams()
+  const [isLoading, setIsLoading] = useState(true)
   const user = useSelector(state => state.user)
 
   const handleShowImage = (id) => {
@@ -29,7 +30,7 @@ export default function SavedPosts() {
           'Content-Type': 'application/json',
         }
       })
-
+      setIsLoading(false)
       setPosts(data.savedPosts)
     } catch (err) {
       console.log(err);
@@ -42,18 +43,22 @@ export default function SavedPosts() {
   return (
     posts && (
       <>
-        {!posts.length > 0 && < Typography >You did not save any post</Typography >}
-        <ImageList sx={{ width: "100%" }} cols={4} >
-          {posts?.map((post) => (
-            <ImageListItem key={post._id} onClick={() => handleShowImage(post._id)}>
-              <img
-                srcSet={`${post.image}`}
-                src={`${post.image}`}
-                alt={post.title} />
-              <ImageListItemBar title={post.title} />
-            </ImageListItem>
-          ))}
+        {isLoading ? <ImageList sx={{ width: "100%" }} cols={4} >
+          {[...Array(8)].map((_, i) => <Skeleton key={i} variant='rectangular' height={'25vw'} />)}
         </ImageList>
+
+          : <ImageList sx={{ width: "100%" }} cols={4} >
+            {posts?.map((post) => (
+              <ImageListItem key={post._id} onClick={() => handleShowImage(post._id)}>
+                <img
+                  srcSet={`${post.image}`}
+                  src={`${post.image}`}
+                  alt={post.title} />
+                <ImageListItemBar title={post.title} />
+              </ImageListItem>
+            ))}
+          </ImageList>
+        }
         {/* Modal for showing the image in larger size */}
         {
           showImage && (

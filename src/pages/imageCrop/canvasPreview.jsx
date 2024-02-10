@@ -1,5 +1,3 @@
-const TO_RADIANS = Math.PI / 180;
-
 export async function canvasPreview(image, canvas, crop) {
   const ctx = canvas.getContext('2d');
 

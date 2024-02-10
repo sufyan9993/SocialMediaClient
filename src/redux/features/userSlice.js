@@ -1,20 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 const setCookies = (state) => {
-    Cookies.set('SecurityToken', state.SecurityToken)
-    Cookies.set('userName', state.userName)
+    localStorage.setItem('SecurityToken', state.SecurityToken)
+    localStorage.setItem('userName', state.userName)
 }
 
 const removeCookies = () => {
-    Cookies.remove('SecurityToken')
-    Cookies.remove('userName')
+    localStorage.removeItem('SecurityToken')
+    localStorage.removeItem('userName')
 }
 const userSlice = createSlice({
     name: 'userData',
     initialState: {
-        SecurityToken: Cookies.get('SecurityToken') ? Cookies.get('SecurityToken') : null,
-        userName: Cookies.get('userName') ? Cookies.get('userName') : null,
-        login: Cookies.get('userName') !== undefined && Cookies.get('userName') !== null,
+        SecurityToken: localStorage.getItem('SecurityToken') ? localStorage.getItem('SecurityToken') : null,
+        userName: localStorage.getItem('userName') ? localStorage.getItem('userName') : null,
+        login: localStorage.getItem('userName') !== undefined && localStorage.getItem('userName') !== null,
         userId: null,
         profilePhoto: null,
         following: null,

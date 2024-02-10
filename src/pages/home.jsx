@@ -5,7 +5,6 @@ import axios from 'axios';
 import { BASE_URL } from '../config';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import CircularLoading from '../components/Loading';
 import { useLocation, useParams } from 'react-router-dom';
 
 const Home = ({ singlePost = false }) => {
