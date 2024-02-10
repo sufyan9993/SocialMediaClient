@@ -1,9 +1,7 @@
 import axios from "axios";
 import { setData } from "./redux/features/userSlice";
 
-// export const BASE_URL = 'http://localhost:8080'
-export const BASE_URL = 'https://socialize-w9vk.onrender.com'
-
+export const BASE_URL = process.env.REACT_APP_BASE_URL
 
 export const calculateDate = (dt) => {
     const postCreationDate = new Date(dt);
